@@ -6,8 +6,7 @@ import pkg from '../package'
 describe('xfmr', () => {
   describe('#getSwagger', () => {
     it('should generate complete and correct Swagger doc', () => {
-      let swagger = xfmr.getSwagger(sails, pkg)
-
+      let swagger = xfmr.getSwagger(sails, sails.hooks.swagger.routes, sails.config.swagger)
 
       assert(swagger)
     })
@@ -45,7 +44,7 @@ describe('xfmr', () => {
 
   describe.skip('#getOperation', () => {
     it('should generate a Swagger Operation object from a Sails route', () => {
-      let route = sails.router._privateRouter.routes.get[0]
+      let route = sails.hooks.swagger.routes[0]
       let swaggerOperation = xfmr.getOperation(route)
 
       assert(_.isObject(swaggerOperation))
@@ -53,7 +52,7 @@ describe('xfmr', () => {
   })
   describe.skip('#getParameters', () => {
     it('should generate an empty array for a Sails route with no keys', () => {
-      let route = sails.router._privateRouter.routes.get[0]
+      let route = sails.hooks.swagger.routes[0]
       let params = xfmr.getParameters(route)
 
       assert(_.isArray(params))
@@ -70,7 +69,7 @@ describe('xfmr', () => {
   })
   describe.skip('#getResponses', () => {
     it('should generate a Swagger Responses object from a Sails route', () => {
-      let route = sails.router._privateRouter.routes.get[0]
+      let route = sails.hooks.swagger.routes[0]
       let swaggerResponses = xfmr.getResponses(route)
 
       assert(_.isObject(swaggerResponses))

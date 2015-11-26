@@ -35,9 +35,18 @@ class Swagger extends Marlinspike {
   }
 
   initialize (next) {
-    let hook = this.sails.hooks.swagger
-    this.sails.after('lifted', () => {
-      hook.doc = xfmr.getSwagger(this.sails, this.sails.config.swagger.pkg)
+    let sails = this.sails
+    let hook = sails.hooks.swagger
+    hook.routes = []
+    sails.on('router:bind', function(routeObj) {
+      if (['/*', '/__getcookie', '/csrfToken', '/csrftoken'].indexOf(routeObj.path) === -1
+        && routeObj.options.controller) {
+        hook.routes.push(routeObj)
+      }
+    })
+
+    sails.after('lifted', () => {
+      hook.doc = xfmr.getSwagger(sails, hook.routes, sails.config.swagger)
     })
 
     next()
